@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"fmt"
 )
 
 func usage() {
@@ -55,7 +56,7 @@ func main() {
 		if skipEmpty && strings.TrimSpace(line) == "" {
 			continue
 		}
-		if printLine {
+		if printLines {
 			fmt.Println(line)
 		}
 		input := append(cmdargs, line)
