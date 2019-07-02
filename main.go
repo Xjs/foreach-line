@@ -25,6 +25,8 @@ func run(cmd string, args ...string) error {
 const skipEmpty = true
 
 func main() {
+	printLines := false
+	flag.BoolVar(&printLines, "print", printLines, "print each line before executing command")
 	flag.Parse()
 
 	if len(flag.Args()) < 2 {
@@ -52,6 +54,9 @@ func main() {
 		line := scanner.Text()
 		if skipEmpty && strings.TrimSpace(line) == "" {
 			continue
+		}
+		if printLine {
+			fmt.Println(line)
 		}
 		input := append(cmdargs, line)
 		if err := run(command, input...); err != nil {
