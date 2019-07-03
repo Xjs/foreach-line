@@ -16,9 +16,18 @@ $ go install github.com/Xjs/foreach-line
 $ foreach-line list-of-links.txt wget
 ```
 
-## Ideas
+## Flags
 
-* Support arbitrary file name positions by a marker like {} (customisable via flag)
+`-print`: print each line before executing
+`pattern`: replace the given pattern by the line in command line, instead of simply appending it as single argument
+  
+  Example: `foreachline -pattern {} curl http://example.com/{}`
+
+`-stdin`, `-stdout`, `-stderr`: Attach the given file to the executed commands as stdin/out/err (if pattern is set, it will be replaced in the filename first; output files will be created)
+
+  Example: `foreachline -pattern {} -stdin {} -stdout linecount-{} wc -l`
+
+`-skip-io-fail`: Skip execution of a line if reading the stdin file or creating the stdout/stderr files (if any set) doesn't succeed (if this flag isn't set, the command will be executed anyway with no stdin and stdout and stderr attached to foreach-line's stdout and stderr, respectively)
 
 ## Contributing
 
