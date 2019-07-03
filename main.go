@@ -3,12 +3,12 @@ package main
 import (
 	"bufio"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"os"
 	"os/exec"
 	"strings"
-	"fmt"
 )
 
 func usage() {
@@ -27,7 +27,9 @@ const skipEmpty = true
 
 func main() {
 	printLines := false
+	pattern := ""
 	flag.BoolVar(&printLines, "print", printLines, "print each line before executing command")
+	flag.StringVar(&pattern, "pattern", pattern, "replace this pattern by trimmed line content")
 	flag.Parse()
 
 	if len(flag.Args()) < 2 {
@@ -59,9 +61,18 @@ func main() {
 		if printLines {
 			fmt.Println(line)
 		}
-		input := append(cmdargs, line)
-		if err := run(command, input...); err != nil {
-			log.Printf("Error running %s (args %s): %v\n", command, strings.Join(input, " "), err)
+		// make copy of arguments
+		args := make([]string, len(cmdargs)+1)
+		copy(args, cmdargs)
+		if pattern != "" {
+			for i := range args {
+				args[i] = strings.ReplaceAll(args[i], pattern, line)
+			}
+		} else {
+			args = append(args, line)
+		}
+		if err := run(command, args...); err != nil {
+			log.Printf("Error running %s (args %s): %v\n", command, strings.Join(args, " "), err)
 			continue
 		}
 	}
